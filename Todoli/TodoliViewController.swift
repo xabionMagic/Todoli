@@ -15,7 +15,29 @@ class TodoliViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewItem))
+    }
+    
+    @objc func addNewItem() {
+        
+        var textfield = UITextField()
+        let alert = UIAlertController(title: "Add New Todoli Item", message: "This is message.", preferredStyle: .alert)
+        
+        let action = UIAlertAction(title: "Add Todoli", style: .default) { (action) in
+            
+            self.todoList.append(textfield.text!)
+            
+            self.tableView.reloadData()
+        }
+        
+        alert.addTextField { (alertTextField) in
+            alertTextField.placeholder = "Create new Todoli"
+            textfield = alertTextField
+        }
+        
+        alert.addAction(action)
+        present(alert, animated: true, completion: nil)
+        
     }
 
     //MARK- TableView DataSource Method
