@@ -13,7 +13,6 @@
 		C10ADED622D3C2AF00F2BA78 /* Todoli.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C10ADED422D3C2AF00F2BA78 /* Todoli.xcdatamodeld */; };
 		C10ADED822D3C2B100F2BA78 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C10ADED722D3C2B100F2BA78 /* Assets.xcassets */; };
 		C10ADEDB22D3C2B100F2BA78 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C10ADED922D3C2B100F2BA78 /* LaunchScreen.storyboard */; };
-		C16E7E2822D6409E00D1577B /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16E7E2722D6409E00D1577B /* Item.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,7 +24,6 @@
 		C10ADED722D3C2B100F2BA78 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C10ADEDA22D3C2B100F2BA78 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C10ADEDC22D3C2B100F2BA78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C16E7E2722D6409E00D1577B /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,7 +62,6 @@
 				C16E7E2C22D640EF00D1577B /* Supporting Files */,
 				C10ADEDC22D3C2B100F2BA78 /* Info.plist */,
 				C10ADED922D3C2B100F2BA78 /* LaunchScreen.storyboard */,
-				C16E7E2D22D640FA00D1577B /* Core Data */,
 			);
 			path = Todoli;
 			sourceTree = "<group>";
@@ -72,7 +69,7 @@
 		C16E7E2922D640AF00D1577B /* Data Model */ = {
 			isa = PBXGroup;
 			children = (
-				C16E7E2722D6409E00D1577B /* Item.swift */,
+				C10ADED422D3C2AF00F2BA78 /* Todoli.xcdatamodeld */,
 			);
 			path = "Data Model";
 			sourceTree = "<group>";
@@ -100,14 +97,6 @@
 				C10ADED722D3C2B100F2BA78 /* Assets.xcassets */,
 			);
 			path = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		C16E7E2D22D640FA00D1577B /* Core Data */ = {
-			isa = PBXGroup;
-			children = (
-				C10ADED422D3C2AF00F2BA78 /* Todoli.xcdatamodeld */,
-			);
-			path = "Core Data";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -181,7 +170,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C16E7E2822D6409E00D1577B /* Item.swift in Sources */,
 				C10ADED622D3C2AF00F2BA78 /* Todoli.xcdatamodeld in Sources */,
 				C10ADED022D3C2AF00F2BA78 /* TodoliViewController.swift in Sources */,
 				C10ADECE22D3C2AF00F2BA78 /* AppDelegate.swift in Sources */,

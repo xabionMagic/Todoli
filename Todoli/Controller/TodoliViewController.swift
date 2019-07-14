@@ -7,22 +7,21 @@
 //
 
 import UIKit
+import CoreData
 
 class TodoliViewController: UITableViewController {
 
     var todoList = [Item]()
-    
-    //var defaults = UserDefaults.standard
-    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
+    //var defaults = UserDefaults.standard
     override func viewDidLoad() {
         super.viewDidLoad()
         
         //DataFilePath -
-        
-        let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
-        
-        print(dataFilePath!)
+        let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+
+        print(dataFilePath)
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewItem))
         
         //MARK:- UserDefaults  app loaded data from this.
@@ -44,9 +43,11 @@ class TodoliViewController: UITableViewController {
         
         let action = UIAlertAction(title: "Add Todoli", style: .default) { (action) in
             
-            let newItem = Item()
+            
+            
+            let newItem = Item(context: self.context)
             newItem.title = textfield.text!
-            newItem.done = true
+            newItem.done = false
             self.todoList.append(newItem)
             
             //UserDefaults Singleton.
@@ -107,39 +108,62 @@ class TodoliViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
+            
+            context.delete(todoList[indexPath.row])
             todoList.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
-           
+            //tableView.deleteRows(at: [indexPath], with: .fade)
+            saveTodoliList()
         }
     }
     
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+       return true
+    }
     
     //MARK:- Model Manupulation Methods
     
     func saveTodoliList() {
-        //Encoder
-        let encoder = PropertyListEncoder()
+        //CoreData
+        
         do {
-            let data = try encoder.encode(todoList)
-            try data.write(to: dataFilePath!)
-        
-        } catch {
-            print("Error encoding item array, \(error)")
+            try context.save()
+        } catch  {
+            print("Error with Saveing Context \(error)")
         }
-        
-        tableView.reloadData()
+     
+        self.tableView.reloadData()
+                    //Encoder
+            //        let encoder = PropertyListEncoder()
+            //        do {
+            //            let data = try encoder.encode(todoList)
+            //            try data.write(to: dataFilePath!)
+            //
+            //        } catch {
+            //            print("Error encoding item array, \(error)")
+            //        }
+            //
+            //        tableView.reloadData()
     }
     
     func loadtodoliList() {
-        //Decoder
-        guard let data = try? Data(contentsOf: dataFilePath!) else { return }
-        let decoder = PropertyListDecoder()
+                //CoreData
+        
+        let request: NSFetchRequest<Item> = Item.fetchRequest()
         do {
-            todoList = try decoder.decode([Item].self, from: data)
+          todoList = try context.fetch(request)
         } catch {
-            print("Error decoding item Array, \(error)")
+            print("Error fetching data from context \(error)")
         }
-    }
+
+                  //Decoder
+            //        guard let data = try? Data(contentsOf: dataFilePath!) else { return }
+            //        let decoder = PropertyListDecoder()
+            //        do {
+            //            todoList = try decoder.decode([Item].self, from: data)
+            //        } catch {
+            //            print("Error decoding item Array, \(error)")
+            //        }
+   }
 }
 
 
