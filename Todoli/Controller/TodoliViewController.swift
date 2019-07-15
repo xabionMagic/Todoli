@@ -12,6 +12,11 @@ import CoreData
 class TodoliViewController: UITableViewController {
 
     var todoList = [Item]()
+    var selectedCategory: Category? {
+        didSet {
+            loadtodoliList()
+        }
+    }
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
     //var defaults = UserDefaults.standard
@@ -31,7 +36,7 @@ class TodoliViewController: UITableViewController {
         
         //Decoded the loaded items by Decoder
         
-        loadtodoliList()
+       // loadtodoliList()  --> Its on the selectedCategory variable ..
         
         
     }
@@ -48,6 +53,7 @@ class TodoliViewController: UITableViewController {
             let newItem = Item(context: self.context)
             newItem.title = textfield.text!
             newItem.done = false
+            newItem.parentCategory = self.selectedCategory
             self.todoList.append(newItem)
             
             //UserDefaults Singleton.
@@ -145,16 +151,24 @@ class TodoliViewController: UITableViewController {
             //        tableView.reloadData()
     }
     
-    func loadtodoliList() {
+   // func loadtodoliList() {
                 //CoreData
-        
-        let request: NSFetchRequest<Item> = Item.fetchRequest()
+    func loadtodoliList(with request: NSFetchRequest<Item> = Item.fetchRequest(), predicate: NSPredicate? = nil) {
+       // let request: NSFetchRequest<Item> = Item.fetchRequest()
+        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
+
+        if let additionalPredicate = predicate {
+            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additionalPredicate])
+        } else {
+            request.predicate = categoryPredicate
+        }
+ 
         do {
           todoList = try context.fetch(request)
         } catch {
             print("Error fetching data from context \(error)")
         }
-
+        tableView.reloadData()
                   //Decoder
             //        guard let data = try? Data(contentsOf: dataFilePath!) else { return }
             //        let decoder = PropertyListDecoder()
@@ -166,5 +180,37 @@ class TodoliViewController: UITableViewController {
    }
 }
 
+//MARK:- Search Bar Methods
+
+extension TodoliViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        let request: NSFetchRequest<Item> = Item.fetchRequest()
+       
+        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+        request.predicate = predicate
+        
+        let sortDescriptor = NSSortDescriptor(key: "title", ascending: true)
+        request.sortDescriptors = [sortDescriptor]
+        
+        loadtodoliList(with: request)
+        
+        //Used when the func loadtodoliLIst doesn't have any parameters
+//        do {
+//            todoList = try context.fetch(request)
+//        } catch {
+//            print("Error fetching data from context, \(error)")
+//        }
+//        tableView.reloadData()
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+       if searchBar.text?.count == 0 {
+            loadtodoliList()
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+        }
+    }
+}
 
 
